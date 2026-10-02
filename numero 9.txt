@@ -1,0 +1,46 @@
+```cpp
+#include <iostream>
+using namespace std;
+
+class Usuarios {
+public:
+    void registrar() {
+        cout << "Registrando usuario" << endl;
+    }
+};
+
+class Pagos {
+public:
+    void calcular() {
+        cout << "Calculando pago" << endl;
+    }
+};
+
+class Reportes {
+public:
+    void imprimir() {
+        cout << "Imprimiendo reporte" << endl;
+    }
+};
+
+class Correos {
+public:
+    void enviar() {
+        cout << "Enviando correo" << endl;
+    }
+};
+
+int main() {
+    Usuarios usuarios;
+    Pagos pagos;
+    Reportes reportes;
+    Correos correos;
+
+    usuarios.registrar();
+    pagos.calcular();
+    reportes.imprimir();
+    correos.enviar();
+
+    return 0;
+}
+```

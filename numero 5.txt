@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+class Padre {
+private:
+    void metodo1() {
+        cout << "Metodo 1" << endl;
+    }
+    void metodo2() {
+        cout << "Metodo 2" << endl;
+    }
+public:
+    void mostrar() {
+        cout << "La clase padre puede usar sus metodos" << endl;
+    }
+};
+class Hija : public Padre {
+public:
+    void probar() {
+        cout << "La hija no puede acceder a los metodos privados" << endl;
+    }
+};
+
+int main() {
+    Hija objeto;
+
+    objeto.probar();
+
+    return 0;
+}

@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+
+class CuentaBancaria {
+private:
+    double saldo;
+public:    
+    CuentaBancaria(double saldoInicial) {
+        if (saldoInicial >= 0) {
+            saldo = saldoInicial;
+        } else {
+            saldo = 0; 
+        } }
+    void retirar(double monto) {
+        if (monto > 0 && monto <= saldo) {
+            saldo -= monto;
+            cout << "Retiro exitoso de $" << monto << endl;
+        } else {
+            cout << "Fondos insuficientes o monto inválido." << endl;
+        } }
+    double obtenerSaldo() {
+        return saldo;
+    }
+};
+int main() {
+    CuentaBancaria miCuenta(100.0);
+    cout << "Saldo inicial: $" << miCuenta.obtenerSaldo() << endl;
+    miCuenta.retirar(30.0);    
+    cout << "Saldo final: $" << miCuenta.obtenerSaldo() << endl;
+    return 0;
+}

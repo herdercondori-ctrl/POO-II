@@ -1,0 +1,25 @@
+
+#include <iostream>
+using namespace std;
+
+class Persona {
+public:
+
+    Persona() {
+        cout << "Se creo el objeto" << endl;
+    }
+
+    ~Persona() {
+        cout << "Se destruyo el objeto" << endl;
+    }
+};
+
+int main() {
+
+    Persona persona;
+
+    cout << "Programa terminado" << endl;
+
+    return 0;
+}
+

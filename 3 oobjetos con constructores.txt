@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+class Persona {
+public:
+    string nombre;
+    int edad;
+    Persona() {
+        nombre = "Sin nombre";
+        edad = 0;}
+    Persona(string n) {
+        nombre = n;
+        edad = 18;}
+    Persona(string n, int e) {
+        nombre = n;
+        edad = e;}
+    void mostrar() {
+        cout << nombre << " - " << edad << endl;
+    }
+};
+
+int main() {
+    Persona p1;
+    Persona p2("Herder");
+    Persona p3("Juan", 20);
+    p1.mostrar();
+    p2.mostrar();
+    p3.mostrar();
+    return 0;
+}

@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+
+class Persona {
+private:
+    string nombre;
+    int edad;
+public:
+    void setNombre(string n) {
+        nombre = n; }
+    void setEdad(int e) {
+        edad = e;}
+    string getNombre() {
+        return nombre;}
+    int getEdad() {
+        return edad; }
+};
+
+int main() {
+    Persona persona;
+
+    persona.setNombre("Herder");
+    persona.setEdad(19);
+
+    cout << persona.getNombre() << endl;
+    cout << persona.getEdad() << endl;
+
+    return 0;
+}
+
+
