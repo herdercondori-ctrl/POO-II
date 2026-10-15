@@ -1,0 +1,184 @@
+
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+class Carta {
+public:
+    int valor;
+    string palo;
+
+    Carta(int v = 0, string p = "") {
+        valor = v;
+        palo = p;
+    }
+};
+
+class Mazo {
+public:
+    Carta cartas[52];
+    int n = 0;
+
+    Mazo(string palos[]) {
+        for (int p = 0; p < 4; p++)
+            for (int v = 1; v <= 13; v++)
+                cartas[n++] = Carta(v, palos[p]);
+
+        for (int i = 51; i > 0; i--)
+            swap(cartas[i], cartas[rand() % (i + 1)]);
+
+        n = 0;
+    }
+
+    Carta sacar() {
+        if (n >= 52) return Carta();
+        return cartas[n++];
+    }
+};
+
+class Jugador {
+public:
+    string nombre;
+    Carta mano[10];
+    int n = 0, puntos = 0;
+
+    void agregar(Carta c) {
+        if (n < 10) {
+            mano[n++] = c;
+            puntos += (c.valor > 10) ? 10 : c.valor;
+        }
+    }
+
+    void mostrar(bool total = false) {
+        cout << nombre << ": ";
+        for (int i = 0; i < n; i++)
+            cout << mano[i].valor << " de " << mano[i].palo << " | ";
+        if (total) cout << "Puntos: " << puntos;
+        cout << endl;
+    }
+};
+
+class Juego21 {
+    int cantidad = 2, objetivo = 21;
+    string palos[4];
+
+    bool cargar() {
+        ifstream f("setup.txt");
+        string linea;
+
+        if (!f) return false;
+
+        while (getline(f, linea)) {
+            size_t pos = linea.find('=');
+            if (pos == string::npos) continue;
+
+            string clave = linea.substr(0, pos);
+            string valor = linea.substr(pos + 1);
+
+            if (clave == "jugadores") cantidad = stoi(valor);
+            if (clave == "valor_ganar") objetivo = stoi(valor);
+
+            if (clave == "palos") {
+                size_t ini = 0;
+
+                for (int i = 0; i < 4; i++) {
+                    size_t coma = valor.find(',', ini);
+                    palos[i] = valor.substr(ini, coma - ini);
+
+                    if (coma == string::npos) break;
+                    ini = coma + 1;
+                }
+            }
+        }
+
+        return cantidad >= 2 && cantidad <= 10 && objetivo > 0;
+    }
+
+public:
+    void jugar() {
+        if (!cargar()) {
+            cout << "Error en setup.txt\n";
+            return;
+        }
+
+        while (true) {
+            cout << "\n=== JUEGO " << objetivo << " ===\n";
+            cout << "Numero de jugadores: " << cantidad << "\n\n";
+
+            Mazo mazo(palos);
+            Jugador j[10];
+
+            for (int i = 0; i < cantidad; i++) {
+                j[i].nombre = (i == 0) ? "Mesa" :
+                              "Jugador " + to_string(i);
+
+                j[i].agregar(mazo.sacar());
+                j[i].mostrar();
+            }
+
+            cout << "\n¡EMPEZAMOS EL JUEGO!\n";
+
+            for (int i = 1; i < cantidad; i++) {
+                int extra;
+
+                cout << j[i].nombre << ", cartas extra (0-2): ";
+                cin >> extra;
+
+                while (cin.fail() || extra < 0 || extra > 2) {
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                    cout << "Ingresa 0, 1 o 2: ";
+                    cin >> extra;
+                }
+
+                while (extra-- > 0)
+                    j[i].agregar(mazo.sacar());
+
+                j[i].mostrar(true);
+            }
+
+            while (j[0].puntos < objetivo * 7 / 10 && j[0].n < 10)
+                j[0].agregar(mazo.sacar());
+
+            cout << "\n";
+            j[0].mostrar(true);
+
+            int mejor = -1, ganador = -1;
+            bool empate = false;
+
+            for (int i = 0; i < cantidad; i++) {
+                if (j[i].puntos <= objetivo) {
+                    if (j[i].puntos > mejor) {
+                        mejor = j[i].puntos;
+                        ganador = i;
+                        empate = false;
+                    } else if (j[i].puntos == mejor) {
+                        empate = true;
+                    }
+                }
+            }
+
+            if (ganador == -1 || empate) {
+                cout << "\nEmpate. Nueva partida...\n";
+                continue;
+            }
+
+            cout << "\nGana " << j[ganador].nombre
+                 << " con " << mejor << " puntos.\n";
+            break;
+        }
+    }
+};
+
+int main() {
+    srand(time(0));
+
+    Juego21 juego;
+    juego.jugar();
+
+    return 0;
+}
