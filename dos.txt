@@ -1,0 +1,30 @@
+#include <iostream>
+#include <array>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int main() {
+    array<string, 12> paises = {"Argentina", "Bolivia", "Brasil", "Chile","Colombia", "Ecuador", "Guyana","Paraguay","Peru", "Surinam"};
+
+    paises.at(10) = "Uruguay";
+    paises[11] = "Venezuela";
+
+    cout << "B: Paises que inician con C o P" << endl;
+    for (auto x : paises) {
+        if (x[0] == 'C' || x[0] == 'P') {
+            cout << x << " ";
+        }
+    } cout << endl << endl;
+
+    cout << "C: Primer y ultimo pais" << endl;
+    cout << "Primer: " << paises.front() << endl;
+    cout << "Ultimo: " << paises.back() << endl;
+
+    cout << endl << "D: Paises ordenados" << endl;
+    sort(paises.begin(), paises.end());
+    for (auto x : paises) {
+        cout << x << endl;
+    }
+    return 0;
+}

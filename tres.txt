@@ -1,0 +1,71 @@
+#include <iostream>
+#include <array>
+#include <string>
+#include <fstream>
+using namespace std;
+
+struct Estudiante {
+    string nombre;
+    int nacimiento;
+    double gpa;
+};
+
+void ingresarTeclado(array<Estudiante, 10>& alumnos) {
+    cout << "\nTERCER ESTUDIANTE" << endl;
+    cin >> alumnos.at(2).nombre;
+    cin >> alumnos.at(2).nacimiento;
+    cin >> alumnos.at(2).gpa;
+    cout << "\nCUARTO ESTUDIANTE" << endl;
+    cin >> alumnos[3].nombre;
+    cin >> alumnos[3].nacimiento;
+    cin >> alumnos[3].gpa;
+}
+
+void insertarArrays(array<Estudiante, 10>& alumnos) {
+    string nombres[3] = {"Gaby", "Patty", "Diana"};
+    int nacimientos[3] = {2002, 2004, 2006};
+    double gps[3] = {3.8, 3.0, 2.9};
+    for (int i = 0; i < 2; i++) {
+        alumnos[i + 4] = {nombres[i], nacimientos[i], gps[i]};
+    }
+}
+
+void leerArchivo(array<Estudiante, 10>& alumnos) {
+    ifstream archivo("datos.txt");
+    if (archivo.is_open()) {
+        for (int i = 6; i < alumnos.size(); i++) {
+            archivo >> alumnos.at(i).nombre;
+            archivo >> alumnos[i].nacimiento;
+            archivo >> alumnos.at(i).gpa;
+        }  archivo.close();
+    } 
+}
+
+void mostrarEstudiantes(array<Estudiante, 10> alumnos) {
+    cout << "\nPRIMERO Y ULTIMO" << endl;
+    cout << "Primer estudiante: " << alumnos.front().nombre << endl;
+    cout << "Ultimo estudiante: " << alumnos.back().nombre << endl;
+
+    cout << "\n========== LISTA DE ESTUDIANTES ==========" << endl;
+    for (auto x : alumnos) {
+        int edad = 2026 - x.nacimiento;
+        cout << "\nNombre: " << x.nombre << " / ";
+        cout << "Nac: " << x.nacimiento << " / ";
+        cout << "Edad: " << edad << " / ";
+        cout << "GPA: " << x.gpa << endl;
+        if (x.gpa >= 3.5) {
+            cout << "Beca: CALIFICA" ;
+        } else {
+            cout << "Beca: NO CALIFICA" ;
+        }
+    }
+}
+
+int main() {
+    array<Estudiante, 10> alumnos = {{{"Juan", 2000, 3.4},{"Maria", 2005, 2.8}}};
+    ingresarTeclado(alumnos);
+    insertarArrays(alumnos);
+    leerArchivo(alumnos);
+    mostrarEstudiantes(alumnos);
+    return 0;
+}

@@ -1,0 +1,44 @@
+#include <iostream>
+#include <array>
+#include <algorithm>
+using namespace std;
+void mostrarTodos(array<int, 20> numeros) {
+    cout << "a: Todos los elementos" << endl;
+    for (auto x : numeros) {
+        cout << x << " ";
+    }  cout << endl << endl;
+}
+
+void mostrarRango(array<int, 20> numeros) {
+    cout << "b: Mayores de 20 y menores de 50" << endl;
+    for (auto x : numeros) {
+        if (x > 20 && x < 50) {
+            cout << x << " ";}
+    } cout << endl << endl;
+}
+
+void ordenarNumeros(array<int, 20>& numeros) {
+    cout << "c: Elementos ordenados" << endl;
+    sort(numeros.begin(), numeros.end());
+    for (auto x : numeros) {
+        cout << x << " ";
+    } cout << endl << endl;
+}
+
+void mostrarIndicesImpares(array<int, 20> numeros) {
+    cout << "d: Elementos de los indices impares menores de 10" << endl;
+    for (int i = 1; i < 10; i = i + 2) {
+        cout << numeros[i] << " ";
+    } cout << endl << endl;
+}
+
+int main() {
+
+    array<int, 20> numeros = {21, 23, 25, 27, 29,51, 53, 55, 57, 59,61, 63, 65, 67, 69,1, 3, 5, 7, 9};
+    
+    mostrarTodos(numeros);
+    mostrarRango(numeros);
+    ordenarNumeros(numeros);
+    mostrarIndicesImpares(numeros);
+    return 0;
+}
