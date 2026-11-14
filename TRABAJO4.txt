@@ -1,0 +1,313 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <limits>
+
+using namespace std;
+
+class Estudiante {
+private:
+    string nombre;
+    int nacimiento;
+    double gpa;
+    double presupuesto;
+
+public:
+    Estudiante() {
+        nombre = "NN";
+        nacimiento = 0;
+        gpa = 0;
+        presupuesto = 0;
+    }
+
+    Estudiante(string nom, int nac, double prom, double pres) {
+        nombre = nom;
+        nacimiento = nac;
+        gpa = prom;
+        presupuesto = pres;
+    }
+
+    string getNombre() const {return nombre;}
+    int getNacimiento() const {return nacimiento;}
+    double getGPA() const {return gpa;}
+    double getPresupuesto() const {return presupuesto;}
+
+    void actualizar(string nom, int nac, double prom, double pres) {
+        nombre = nom;
+        nacimiento = nac;
+        gpa = prom;
+        presupuesto = pres;
+    }
+
+    double indiceUniversidad() const {
+        return abs(gpa - 3.0) * presupuesto;
+    }
+    void mostrar() const {
+        cout << "Nombre: " << nombre << endl;
+        cout << "Nacimiento: " << nacimiento << endl;
+        cout << "GPA: " << gpa << endl;
+        cout << "Presupuesto: " << presupuesto << endl;
+        cout << "Indice universidad: " << indiceUniversidad() << endl;
+    }
+};
+
+Estudiante ingresarDatos() {
+    string nombre;
+    int nacimiento;
+    double gpa, presupuesto;
+
+    cout << "Nombre: ";
+    cin >> ws;
+    getline(cin, nombre);
+    cout << "Anio de nacimiento: "; cin >> nacimiento;
+    cout << "GPA: "; cin >> gpa;
+    cout << "Presupuesto: "; cin >> presupuesto;
+return Estudiante(nombre, nacimiento, gpa, presupuesto);
+}
+
+void imprimir(const vector<Estudiante>& estudiantes) {
+    if (estudiantes.empty()) {
+        cout << "\nEl vector esta vacio.\n";
+        return;
+    }
+
+    cout << "\n LISTA DE ESTUDIANTES \n";
+
+    for (int i = 0; i < estudiantes.size(); i++) {
+        cout << "\nIndice: " << i << endl;
+        estudiantes[i].mostrar();
+    }
+}
+
+void insertar(vector<Estudiante>& estudiantes) {
+    int opcion, posicion, tipo;
+
+    cout << "\n1. Insertar al final";
+    cout << "\n2. Insertar en un indice";
+    cout << "\nSeleccione: ";
+    cin >> opcion;
+
+    if (opcion != 1 && opcion != 2) {
+        cout << "Opcion incorrecta.\n";
+        return;
+    }
+
+    if (opcion == 2) {
+        cout << "Ingrese indice (0 a " << estudiantes.size() << "): ";
+        cin >> posicion;
+
+        if (posicion < 0 || posicion > estudiantes.size()) {
+            cout << "Indice incorrecto.\n";
+            return;
+        }
+    }
+
+    cout << "\n1. Estudiante por defecto";
+    cout << "\n2. Estudiante con datos";
+    cout << "\nSeleccione: ";
+    cin >> tipo;
+
+    Estudiante nuevo;
+
+    if (tipo == 1) {
+        nuevo = Estudiante();
+    }
+    else if (tipo == 2) {
+        nuevo = ingresarDatos();
+    }
+    else {
+        cout << "Tipo incorrecto.\n";
+        return;
+    }
+
+    if (opcion == 1) {
+        estudiantes.push_back(nuevo);
+    }
+    else {
+        estudiantes.insert(estudiantes.begin() + posicion, nuevo);
+    }
+    cout << "Estudiante insertado correctamente.\n";
+}
+
+void eliminar(vector<Estudiante>& estudiantes) {
+    if (estudiantes.empty()) {
+        cout << "No hay estudiantes para eliminar.\n";
+        return;
+    }
+
+    int opcion, posicion;
+
+    cout << "\n1. Eliminar ultimo estudiante";
+    cout << "\n2. Eliminar por indice";
+    cout << "\nSeleccione: ";
+    cin >> opcion;
+
+    if (opcion == 1) {
+        estudiantes.pop_back();
+        cout << "Ultimo estudiante eliminado.\n";
+    }
+    else if (opcion == 2) {
+        cout << "Ingrese indice (0 a "
+             << estudiantes.size() - 1 << "): ";
+        cin >> posicion;
+
+        if (posicion < 0 || posicion >= estudiantes.size()) {
+            cout << "Indice incorrecto.\n";
+            return;
+        }
+
+        estudiantes.erase(estudiantes.begin() + posicion);
+        cout << "Estudiante eliminado.\n";
+    }
+    else {
+        cout << "Opcion incorrecta.\n";
+    }
+}
+
+void actualizar(vector<Estudiante>& estudiantes) {
+    if (estudiantes.empty()) {
+        cout << "No hay estudiantes para actualizar.\n";
+        return;
+    }
+    int posicion;
+    cout << "Ingrese el indice del estudiante: ";
+    cin >> posicion;
+    if (posicion < 0 || posicion >= estudiantes.size()) {
+        cout << "Indice incorrecto.\n";
+        return;
+    }
+
+    cout << "\nIngrese los nuevos datos:\n";
+
+    Estudiante nuevo = ingresarDatos();
+
+    estudiantes[posicion].actualizar(
+        nuevo.getNombre(),
+        nuevo.getNacimiento(),
+        nuevo.getGPA(),
+        nuevo.getPresupuesto()
+    );
+
+    cout << "Estudiante actualizado \n";
+}
+
+void ordenar(vector<Estudiante>& estudiantes) {
+    if (estudiantes.empty()) {
+        cout << "No hay estudiantes para ordenar.\n";
+        return;
+    }
+
+    int opcion;
+
+    cout << "\n ORDENAR ESTUDIANTES \n";
+    cout << "1. Por nacimiento\n";
+    cout << "2. Por GPA\n";
+    cout << "3. Por presupuesto\n";
+    cout << "4. Por indice universidad\n";
+    cout << "Seleccione: ";
+    cin >> opcion;
+
+    switch (opcion) {
+
+        case 1:
+            sort(estudiantes.begin(), estudiantes.end(),
+                [](const Estudiante& a, const Estudiante& b) {
+                    return a.getNacimiento() < b.getNacimiento();
+                });
+
+            cout << "\nESTUDIANTES ORDENADOS POR NACIMIENTO\n";
+
+            for (const auto& e : estudiantes) {
+                cout << e.getNombre() << " (" << e.getNacimiento() << ")\n";
+            }
+            break;
+
+        case 2:
+            sort(estudiantes.begin(), estudiantes.end(),
+                [](const Estudiante& a, const Estudiante& b) {
+                    return a.getGPA() < b.getGPA();
+                });
+
+            cout << "\nESTUDIANTES ORDENADOS POR GPA\n";
+
+            for (const auto& e : estudiantes) {
+                cout << e.getNombre() << " (" << e.getGPA() << ")\n";
+            }
+            break;
+
+        case 3:
+            sort(estudiantes.begin(), estudiantes.end(),
+                [](const Estudiante& a, const Estudiante& b) {
+                    return a.getPresupuesto() < b.getPresupuesto();
+                });
+
+            cout << "\nESTUDIANTES ORDENADOS POR PRESUPUESTO\n";
+
+            for (const auto& e : estudiantes) {
+                cout << e.getNombre() << " (" << e.getPresupuesto() << ")\n";
+            }
+            break;
+
+        case 4:
+            sort(estudiantes.begin(), estudiantes.end(),
+                [](const Estudiante& a, const Estudiante& b) {
+                    return a.indiceUniversidad() < b.indiceUniversidad();
+                });
+
+            cout << "\nESTUDIANTES ORDENADOS POR INDICE UNIVERSIDAD\n";
+
+            for (const auto& e : estudiantes) {
+                cout << e.getNombre() << " (" << e.indiceUniversidad() << ")\n";
+            }
+            break;
+
+        default:
+            cout << "Opcion incorrecta.\n";
+            return;
+    }
+
+    cout << "--------------------------\n";
+}
+
+int main() {
+    vector<Estudiante> estudiantes;
+    int opcion;
+    cout << fixed << setprecision(2);
+    do {
+        cout << "\n1. Insertar\n";
+        cout << "2. Eliminar\n";
+        cout << "3. Actualizar\n";
+        cout << "4. Ordenar\n";
+        cout << "5. Imprimir\n";
+        cout << "0. Salir\n";
+        cout << "Seleccione : ";
+        cin >> opcion;
+        switch (opcion) {
+            case 1:
+                insertar(estudiantes);
+                break;
+            case 2:
+                eliminar(estudiantes);
+                break;
+            case 3:
+                actualizar(estudiantes);
+                break;
+            case 4:
+                ordenar(estudiantes);
+                break;
+            case 5:
+                imprimir(estudiantes);
+                break;
+            case 0:
+                cout << "Saliendo del programa...\n";
+                break;
+            default:
+                cout << "Opcion incorrecta.\n";
+        }
+
+    } while (opcion != 0);
+    return 0;
+}
